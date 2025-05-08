@@ -44,7 +44,7 @@ pip install -r requirements.txt
 python rl_train.py
 ```
 - Saves model checkpoints every 25,000 timesteps in `models/PPO/`
-- TensorBoard logs available in `logs/`
+- TensorBoard logs available in `logs/`, use below command while training models to see how they perform
 ```bash
 tensorboard --logdir=logs
 ```
