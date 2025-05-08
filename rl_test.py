@@ -2,7 +2,7 @@ from stable_baselines3 import PPO
 from snakeEnv import SnakeEnv
 
 models_dir = "models/PPO"
-model_path = f"{models_dir}/50000.zip"
+model_path = f"{models_dir}/best_model.zip"
 
 env = SnakeEnv(render_mode='human')
 
