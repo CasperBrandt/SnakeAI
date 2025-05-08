@@ -30,7 +30,7 @@ class SnakeEnv(gym.Env):
         self.action_space = spaces.Discrete(4)
         # Example for using image as input (channel-first; channel-last also works):
         self.observation_space = spaces.Box(low=-1000, high=1000,
-                                            shape=(8,), dtype=np.float64)
+                                            shape=(10,), dtype=np.float64)
 
     def step(self, action):
         # handling key events
@@ -57,9 +57,11 @@ class SnakeEnv(gym.Env):
             self.snake_position[0] += 100
 
         # Snake body growing mechanism
+        self.reward = 0
         self.snake_body.insert(0, list(self.snake_position))
         if self.snake_position[0] == self.fruit_position[0] and self.snake_position[1] == self.fruit_position[1]:
             self.score += 10
+            self.reward = 100
             self.timeSinceFruit = 0
             self.fruit_spawn = False
         else:
@@ -87,21 +89,23 @@ class SnakeEnv(gym.Env):
         # Length of the snake
         snakeLength = len(self.snake_body) 
         
-        # Todo: Come up with a clever way to let the agent know where the snakes body is,
-        
+        # Coordinates for the tailtip
+        tailx = self.snake_body[-1][0]
+        taily = self.snake_body[-1][1]
         
         # Coordinates to the fruit
         fruitx = self.fruit_position[0]
         fruity = self.fruit_position[1]
         
         # Euclidean distance between head and fruit
-        fruitdist = math.sqrt( ((headx-fruitx)**2) + ((heady-fruity)**2) )
+        fruitdistx = abs(headx-fruitx)
+        fruitdisty = abs(heady-fruity)
         
         # Direction that the snake is traveling in
         snakeDirection = self.direction
         
         # Knowledge that the agent will have access to
-        self.observation = [headx, heady, snakeLength, fruitx, fruity, fruitdist, snakeDirection, self.timeSinceFruit]
+        self.observation = [headx, heady, snakeLength, fruitx, fruity, fruitdistx, fruitdisty, snakeDirection, tailx, taily]
         self.observation = np.array(self.observation)
         
         # Step time since fruit has been eaten
@@ -114,8 +118,6 @@ class SnakeEnv(gym.Env):
         # If the agent dies or ends up in a loop it gets a negative reward, else its the normal reward
         if self.terminated or self.truncated:
             self.reward = -10
-        else:
-            self.reward = self.score*snakeLength
         
         info = {}
         return self.observation, self.reward, self.terminated, self.truncated, info
@@ -162,21 +164,23 @@ class SnakeEnv(gym.Env):
         # Length of the snake
         snakeLength = len(self.snake_body) 
         
-        # Todo: Come up with a clever way to let the agent know where the snakes body is,
-        
+        # Coordinates for the tailtip
+        tailx = self.snake_body[-1][0]
+        taily = self.snake_body[-1][1]
         
         # Coordinates to the fruit
         fruitx = self.fruit_position[0]
         fruity = self.fruit_position[1]
         
         # Euclidean distance between head and fruit
-        fruitdist = math.sqrt( ((headx-fruitx)**2) + ((heady-fruity)**2) )
+        fruitdistx = abs(headx-fruitx)
+        fruitdisty = abs(heady-fruity)
         
         # Direction that the snake is traveling in
         snakeDirection = self.direction
         
         # Knowledge that the agent will have access to
-        self.observation = [headx, heady, snakeLength, fruitx, fruity, fruitdist, snakeDirection, self.timeSinceFruit]
+        self.observation = [headx, heady, snakeLength, fruitx, fruity, fruitdistx, fruitdisty, snakeDirection, tailx, taily]
         self.observation = np.array(self.observation)
         
         self.info = {}
