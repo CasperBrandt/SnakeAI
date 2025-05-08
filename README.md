@@ -45,6 +45,9 @@ python rl_train.py
 ```
 - Saves model checkpoints every 25,000 timesteps in `models/PPO/`
 - TensorBoard logs available in `logs/`
+```bash
+tensorboard --logdir=logs
+```
 
 ### Testing
 ```bash
