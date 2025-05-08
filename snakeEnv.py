@@ -16,7 +16,7 @@ red = pygame.Color(255, 0, 0)
 green = pygame.Color(0, 255, 0)
 blue = pygame.Color(0, 0, 255)
 
-RENDER_FPS = 4
+RENDER_FPS = 6
 
 class SnakeEnv(gym.Env):
     """Snake Environment that follows gym interface."""
@@ -30,7 +30,7 @@ class SnakeEnv(gym.Env):
         self.action_space = spaces.Discrete(4)
         # Example for using image as input (channel-first; channel-last also works):
         self.observation_space = spaces.Box(low=-1000, high=1000,
-                                            shape=(10,), dtype=np.float64)
+                                            shape=(14,), dtype=np.float64)
 
     def step(self, action):
         # handling key events
@@ -93,6 +93,24 @@ class SnakeEnv(gym.Env):
         tailx = self.snake_body[-1][0]
         taily = self.snake_body[-1][1]
         
+        # Detect danger
+        if [self.snake_position[0], self.snake_position[1]-100] in self.snake_body:
+            danger0 = 1
+        else:
+            danger0 = 0
+        if [self.snake_position[0], self.snake_position[1]+100] in self.snake_body:
+            danger1 = 1
+        else:
+            danger1 = 0
+        if [self.snake_position[0]-100, self.snake_position[1]] in self.snake_body:
+            danger2 = 1
+        else:
+            danger2 = 0
+        if [self.snake_position[0]+100, self.snake_position[1]] in self.snake_body:
+            danger3 = 1
+        else:
+            danger3 = 0
+        
         # Coordinates to the fruit
         fruitx = self.fruit_position[0]
         fruity = self.fruit_position[1]
@@ -105,7 +123,7 @@ class SnakeEnv(gym.Env):
         snakeDirection = self.direction
         
         # Knowledge that the agent will have access to
-        self.observation = [headx, heady, snakeLength, fruitx, fruity, fruitdistx, fruitdisty, snakeDirection, tailx, taily]
+        self.observation = [headx, heady, snakeLength, fruitx, fruity, fruitdistx, fruitdisty, snakeDirection, tailx, taily, danger0, danger1, danger2, danger3]
         self.observation = np.array(self.observation)
         
         # Step time since fruit has been eaten
@@ -115,7 +133,7 @@ class SnakeEnv(gym.Env):
         if self.timeSinceFruit > 20+snakeLength:
             self.truncated = True
         
-        # If the agent dies or ends up in a loop it gets a negative reward, else its the normal reward
+        # If the agent dies or ends up in a loop it gets a negative reward
         if self.terminated or self.truncated:
             self.reward = -10
         
@@ -168,6 +186,25 @@ class SnakeEnv(gym.Env):
         tailx = self.snake_body[-1][0]
         taily = self.snake_body[-1][1]
         
+        # Detect danger
+        if [self.snake_position[0], self.snake_position[1]-100] in self.snake_body:
+            danger0 = 1
+        else:
+            danger0 = 0
+        if [self.snake_position[0], self.snake_position[1]+100] in self.snake_body:
+            danger1 = 1
+        else:
+            danger1 = 0
+        if [self.snake_position[0]-100, self.snake_position[1]] in self.snake_body:
+            danger2 = 1
+        else:
+            danger2 = 0
+        if [self.snake_position[0]+100, self.snake_position[1]] in self.snake_body:
+            danger3 = 1
+        else:
+            danger3 = 0
+        
+        
         # Coordinates to the fruit
         fruitx = self.fruit_position[0]
         fruity = self.fruit_position[1]
@@ -180,7 +217,7 @@ class SnakeEnv(gym.Env):
         snakeDirection = self.direction
         
         # Knowledge that the agent will have access to
-        self.observation = [headx, heady, snakeLength, fruitx, fruity, fruitdistx, fruitdisty, snakeDirection, tailx, taily]
+        self.observation = [headx, heady, snakeLength, fruitx, fruity, fruitdistx, fruitdisty, snakeDirection, tailx, taily, danger0, danger1, danger2, danger3]
         self.observation = np.array(self.observation)
         
         self.info = {}
