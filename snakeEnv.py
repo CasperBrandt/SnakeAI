@@ -16,7 +16,7 @@ red = pygame.Color(255, 0, 0)
 green = pygame.Color(0, 255, 0)
 blue = pygame.Color(0, 0, 255)
 
-RENDER_FPS = 3
+RENDER_FPS = 4
 
 class SnakeEnv(gym.Env):
     """Snake Environment that follows gym interface."""
